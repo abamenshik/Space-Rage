@@ -733,7 +733,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1386429771}
-  - component: {fileID: 1386429772}
   m_Layer: 0
   m_Name: ---  AUDIO  ---
   m_TagString: Untagged
@@ -756,19 +755,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1386429772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1386429770}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a469a1a98fec774c8275c0a8b873b12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  go: {fileID: 0}
 --- !u!1 &1700695334
 GameObject:
   m_ObjectHideFlags: 0
@@ -778,7 +764,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1700695335}
-  - component: {fileID: 1700695336}
   m_Layer: 0
   m_Name: ---  MANAGERS  ---
   m_TagString: Untagged
@@ -801,38 +786,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1700695336
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1700695334}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8eb52c502944a888158d1a0c1c2bff1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isDebugging: 0
-  findTargetBufferSize: 16
-  findTargetCountDown:
-    isDebugging: 0
-    _duration: 0.2
-    _current: 0.2
-  isGizmosEnabled: 0
-  targetMask:
-    serializedVersion: 2
-    m_Bits: 0
-  obstacleMask:
-    serializedVersion: 2
-    m_Bits: 0
-  viewAngle: 90
-  viewRadiusFar: 15
-  materialFar: {fileID: 0}
-  meshPrecision: 60
-  initOnAwake: 1
-  viewRadiusNear: 7.5
-  materialNear: {fileID: 0}
 --- !u!1 &1738806664
 GameObject:
   m_ObjectHideFlags: 0
