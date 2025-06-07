@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Components.Colliders;
 using UnityEngine;
 
 namespace SpaceRage
@@ -7,11 +8,16 @@ namespace SpaceRage
     public class PlayerController : MonoBehaviour
     {
         public event Action<bool> OnBrakingStateChange;
+        public event Action<bool> OnKickStateChange;
 
         [Header("Jumps")]
         [SerializeField, Min(1f)] private float jumpForce = 10f;
         [SerializeField, Min(1f)] private float jumpWhenHoldForce = 12f;
         [SerializeField, Min(1f)] private float doubleJumpForce = 15f;
+
+        [Header("Kick")]
+        [SerializeField] private Cooldown kickCd;
+        [SerializeField, Min(0f)] private float jumpAfterKickForce;
 
         [Header("Grab")]
         [SerializeField, Min(0f)] private float distanceGrab;
@@ -23,6 +29,7 @@ namespace SpaceRage
         [Header("Other")]
         [SerializeField, Min(1f)] private float rotationSpeedX;
         [SerializeField, Min(1f)] private float rotationSpeedY;
+        [SerializeField] private RayCaster collisionWithGround;
         [SerializeField, Min(0f)] private float checkGroundRadius = 1f;
         [SerializeField] private LayerMask whatIsGround;
         [SerializeField] private GameObject armsPrefab;
@@ -31,6 +38,7 @@ namespace SpaceRage
         private bool doubleJumpIsUnlocked;
         private bool isHolding;
         private bool isSmoothBraking;
+        private GameObject prewArms;
 
         private float Speed => _rigidbody.linearVelocity.magnitude;
         private bool IsTouchingGround => Physics.CheckSphere(
@@ -39,6 +47,8 @@ namespace SpaceRage
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
+
+            collisionWithGround.Origin = transform;
         }
         private void Start()
         {
@@ -46,7 +56,6 @@ namespace SpaceRage
         }
         private void Update()
         {
-            print(isSmoothBraking);
             var isTouchingGround = IsTouchingGround;
 
             if (isTouchingGround)
@@ -66,10 +75,8 @@ namespace SpaceRage
                 if (Physics.Raycast(ray, out var hit, distanceGrab, whatIsGround)
                     && !isSmoothBraking)
                 {
-                    //print(Speed);
                     if (Speed < speedOverSmoothBraking)
                     {
-                        //Debug.Log("rig 0 " + Time.time);
                         _rigidbody.linearVelocity = Vector3.zero;
                     }
                     else
@@ -95,6 +102,8 @@ namespace SpaceRage
                 else if (doubleJumpIsUnlocked)
                 {
                     JumpDouble();
+                    OnKickStateChange?.Invoke(true);
+                    StartCoroutine(LateKickEnd());
                 }
             }
             var xRotation = Input.GetAxis("Mouse X") * rotationSpeedX * Time.deltaTime;
@@ -102,7 +111,27 @@ namespace SpaceRage
 
             transform.Rotate(-yRotation, xRotation, 0, Space.Self);
         }
-        private GameObject prewArms;
+
+        private IEnumerator LateKickEnd()
+        {
+            kickCd.Reset();
+
+            while (!kickCd.IsReady)
+            {
+                if (collisionWithGround.TryRayCast(transform.forward, out var hit))
+                {
+                    Debug.Log(hit.collider.name);
+
+                    Jump(jumpAfterKickForce, -transform.forward);
+
+                    break;
+                }
+
+                yield return null;
+            }
+
+            OnKickStateChange?.Invoke(false);
+        }
         private IEnumerator SmoothBrake(RaycastHit hit)
         {
             var grabPoint = hit.point;
@@ -162,11 +191,11 @@ namespace SpaceRage
         }
         private void Jump(float force)
         {
-            //var direction = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.5f));
-            var direction = transform.forward;
+            Jump(force, transform.forward);
+        }
+        private void Jump(float force, Vector3 direction)
+        {
             _rigidbody.linearVelocity = direction.normalized * force;
-
-            Debug.DrawLine(transform.position, transform.position + direction, Color.yellow);
         }
         private RaycastHit hit;
 #if UNITY_EDITOR
