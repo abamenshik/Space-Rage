@@ -553,6 +553,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 142c9148bc451664f96df8c41fdb60be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  armBusy: {fileID: -64089187, guid: 34c9b664bfded6743bbfb1a2d18520ac, type: 3}
+  armFree: {fileID: 1854693442, guid: 996a5e7bdc8c0d340aa81a0f739a9c4f, type: 3}
   maxZ: -0.6
   maxZatSpeed: 70
   smoothness: 0.2
@@ -2375,13 +2377,18 @@ MonoBehaviour:
   jumpForce: 50
   jumpWhenHoldForce: 70
   doubleJumpForce: 70
+  distanceGrab: 1
+  rotationSpeedWhenSmoothBraking: 10
+  rotationTime: 0.5
+  speedOverSmoothBraking: 15
+  brakeIntensivity: 70
   rotationSpeedX: 250
   rotationSpeedY: 250
-  brakeIntensivity: 0.3
   checkGroundRadius: 1
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8
+  armsPrefab: {fileID: 1849593256280651180, guid: d110e611fb7e46e45afe6306d7f41175, type: 3}
 --- !u!1 &1635176385
 GameObject:
   m_ObjectHideFlags: 0
