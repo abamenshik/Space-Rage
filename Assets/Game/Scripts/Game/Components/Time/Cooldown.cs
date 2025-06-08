@@ -1,14 +1,19 @@
+using System;
 using UnityEngine;
 
-[System.Serializable]
+[Serializable]
 public class Cooldown
 {
+    public event Action OnReset;
+
     public float Value;
 
     private float _timesUp;
 
     public void Reset()
     {
+        OnReset?.Invoke();
+
         _timesUp = Time.time + Value;
     }
     public float RemainingTime => Mathf.Max(_timesUp - Time.time, 0);

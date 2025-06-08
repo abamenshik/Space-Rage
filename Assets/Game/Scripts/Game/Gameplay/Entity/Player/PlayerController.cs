@@ -25,6 +25,12 @@ namespace SpaceRage
         [SerializeField, Min(0f)] private float speedOverSmoothBraking;
         [SerializeField, Min(0f)] private float brakeIntensivity = 0.98f;
 
+        [Header("Impulse")]
+        [SerializeField, Min(0f)] private float impulseForce;
+        public RayCaster impulseCast;
+        public Cooldown impulseCd;
+
+
         [Header("Other")]
         [SerializeField, Min(1f)] private float rotationSpeedX;
         [SerializeField, Min(1f)] private float rotationSpeedY;
@@ -52,6 +58,7 @@ namespace SpaceRage
             _rigidbody = GetComponent<Rigidbody>();
 
             collisionWithGround.Origin = transform;
+            impulseCast.Origin = transform;
         }
         private void Start()
         {
@@ -67,9 +74,21 @@ namespace SpaceRage
                 doubleJumpIsUnlocked = true;
             }
 
+            ImpulseCheck();
             GrabCheck();
             JumpCheck();
             CamRotate();
+        }
+        private void ImpulseCheck()
+        {
+            if (!Input.GetMouseButton(1)) return;
+
+            if (!impulseCd.IsReady) return;
+
+            if (!impulseCast.TryRayCast(transform.forward, out _)) return;
+
+            Jump(impulseForce, -transform.forward);
+            impulseCd.Reset();
         }
         private void GrabCheck()
         {
