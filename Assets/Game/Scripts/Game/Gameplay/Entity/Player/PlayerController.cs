@@ -46,6 +46,9 @@ namespace SpaceRage
 
         private void Awake()
         {
+            // TODO: to entry point
+            Application.targetFrameRate = 60;
+
             _rigidbody = GetComponent<Rigidbody>();
 
             collisionWithGround.Origin = transform;
