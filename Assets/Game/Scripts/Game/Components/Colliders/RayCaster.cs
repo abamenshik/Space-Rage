@@ -6,7 +6,7 @@ namespace Components.Colliders
     [Serializable]
     public class RayCaster
     {
-        [SerializeField] private float distance;
+        public float distance;
         [SerializeField] private LayerMask layerMask;
 
         public Transform Origin;
