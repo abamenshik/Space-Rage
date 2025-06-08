@@ -20,11 +20,10 @@ namespace SpaceRage
         [SerializeField, Min(0f)] private float jumpAfterKickForce;
 
         [Header("Grab")]
-        [SerializeField, Min(0f)] private float distanceGrab;
         [SerializeField, Min(0f)] private float rotationSpeedWhenSmoothBraking;
         [SerializeField, Min(0f)] private float rotationTime = 0.5f;
         [SerializeField, Min(0f)] private float speedOverSmoothBraking;
-        [SerializeField, Min(0f)/*, Range(0f, 1f)*/] private float brakeIntensivity = 0.98f;
+        [SerializeField, Min(0f)] private float brakeIntensivity = 0.98f;
 
         [Header("Other")]
         [SerializeField, Min(1f)] private float rotationSpeedX;
@@ -37,6 +36,7 @@ namespace SpaceRage
         private Rigidbody _rigidbody;
         private bool doubleJumpIsUnlocked;
         private bool isHolding;
+        private bool isGrounded;
         private bool isSmoothBraking;
         private GameObject prewArms;
 
@@ -61,22 +61,25 @@ namespace SpaceRage
         {
             var isTouchingGround = IsTouchingGround;
 
-            if (isTouchingGround)
-                doubleJumpIsUnlocked = true;
-
-            if (Input.GetMouseButtonUp(0))
+            if (isHolding)
             {
-                isHolding = false;
-                OnBrakingStateChange?.Invoke(false);
+                isGrounded = true;
+                doubleJumpIsUnlocked = true;
             }
+
+            GrabCheck();
+            JumpCheck();
+            CamRotate();
+        }
+        private void GrabCheck()
+        {
             if (Input.GetMouseButton(0))
             {
                 isHolding = true;
                 OnBrakingStateChange?.Invoke(true);
 
-                var ray = new Ray(transform.position, transform.forward);
-                if (Physics.Raycast(ray, out var hit, distanceGrab, whatIsGround)
-                    && !isSmoothBraking)
+                var isGrabing = collisionWithGround.TryRayCast(transform.forward, out var hit);
+                if (isGrabing && !isSmoothBraking)
                 {
                     if (Speed < speedOverSmoothBraking)
                     {
@@ -89,26 +92,38 @@ namespace SpaceRage
                     }
                 }
             }
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetMouseButtonUp(0))
             {
-                if (isTouchingGround)
-                {
-                    if (isHolding)
-                    {
-                        JumpStrengthen();
-                    }
-                    else
-                    {
-                        JumpCommon();
-                    }
-                }
-                else if (doubleJumpIsUnlocked)
-                {
-                    JumpDouble();
-                    OnKickStateChange?.Invoke(true);
-                    StartCoroutine(LateKickEnd());
-                }
+                isHolding = false;
+                OnBrakingStateChange?.Invoke(false);
             }
+        }
+        private void JumpCheck()
+        {
+            if (!Input.GetKeyDown(KeyCode.Space))
+                return;
+
+            if (isGrounded)
+            {
+                if (isHolding)
+                {
+                    JumpStrengthen();
+                }
+                else
+                {
+                    JumpCommon();
+                }
+                isGrounded = false;
+            }
+            else if (doubleJumpIsUnlocked)
+            {
+                JumpDouble();
+
+                StartCoroutine(LateKickEnd());
+            }
+        }
+        private void CamRotate()
+        {
             var xRotation = Input.GetAxis("Mouse X") * rotationSpeedX * Time.deltaTime;
             var yRotation = Input.GetAxis("Mouse Y") * rotationSpeedY * Time.deltaTime;
 
@@ -117,6 +132,8 @@ namespace SpaceRage
 
         private IEnumerator LateKickEnd()
         {
+            OnKickStateChange?.Invoke(true);
+
             kickCd.Reset();
 
             while (!kickCd.IsReady)
@@ -200,12 +217,26 @@ namespace SpaceRage
         {
             _rigidbody.linearVelocity = direction.normalized * force;
         }
+
+
         private RaycastHit hit;
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
+            if (collisionWithGround.TryRayCast(transform.forward, out var hit))
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawLine(transform.position.AddToY(-.5f), hit.point);
+            }
+            else
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(transform.position.AddToY(-.5f), transform.position + transform.forward * collisionWithGround.distance);
+            }
+
             UnityEditor.Handles.SphereHandleCap(0, hit.point, Quaternion.identity, 1, EventType.Repaint);
 
+            Gizmos.color = Color.white;
             Gizmos.DrawWireSphere(transform.position, checkGroundRadius);
         }
 #endif

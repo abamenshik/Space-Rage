@@ -26,4 +26,28 @@ public static class Vector3Extension
     {
         return (to - from).normalized;
     }
+    public static Vector3 NewX(this Vector3 v, float x)
+    {
+        return new(x, v.y, v.z);
+    }
+    public static Vector3 NewY(this Vector3 v, float y)
+    {
+        return new(v.x, y, v.z);
+    }
+    public static Vector3 NewZ(this Vector3 v, float z)
+    {
+        return new(v.x, v.y, z);
+    }
+    public static Vector3 AddToX(this Vector3 v, float x)
+    {
+        return new(v.x + x, v.y, v.z);
+    }
+    public static Vector3 AddToY(this Vector3 v, float y)
+    {
+        return new(v.x, v.y + y, v.z);
+    }
+    public static Vector3 AddToZ(this Vector3 v, float z)
+    {
+        return new(v.x, v.y, v.z + z);
+    }
 }
