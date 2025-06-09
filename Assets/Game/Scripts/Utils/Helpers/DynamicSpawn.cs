@@ -1,33 +1,36 @@
 ﻿using UnityEngine;
 
-public static class DynamicSpawn
+namespace MyCheats
 {
-    private static Transform _parent;
-
-    public static Transform Parent
+    public static class DynamicSpawn
     {
-        get
+        private static Transform _parent;
+
+        public static Transform Parent
         {
-            if (_parent == null)
+            get
             {
-                _parent = new GameObject("----  DYNAMIC_SPAWN  ----").transform;
+                if (_parent == null)
+                {
+                    _parent = new GameObject("----  DYNAMIC_SPAWN  ----").transform;
+                }
+                return _parent;
             }
-            return _parent;
         }
-    }
 
-    private static Transform _dontDestroyOnLoadParent;
+        private static Transform _dontDestroyOnLoadParent;
 
-    public static Transform DontDestroyOnLoadParent
-    {
-        get
+        public static Transform DontDestroyOnLoadParent
         {
-            if (_dontDestroyOnLoadParent == null)
+            get
             {
-                _dontDestroyOnLoadParent = new GameObject("----  DontDestroyOnLoadParent  ----").transform;
-                Object.DontDestroyOnLoad(DontDestroyOnLoadParent);
+                if (_dontDestroyOnLoadParent == null)
+                {
+                    _dontDestroyOnLoadParent = new GameObject("----  DontDestroyOnLoadParent  ----").transform;
+                    Object.DontDestroyOnLoad(DontDestroyOnLoadParent);
+                }
+                return _dontDestroyOnLoadParent;
             }
-            return _dontDestroyOnLoadParent;
         }
     }
 }
