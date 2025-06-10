@@ -1,15 +1,17 @@
+using System.Collections;
+
 namespace MyCheats
 {
     public abstract class CheatBase
     {
         public abstract string Name { get; }
         public abstract string Description { get; }
-        public void Do()
+        public IEnumerator Do()
         {
-            DoProt();
-
             UnityEngine.Debug.Log($"Cheat {GetType().Name} is applied!");
+
+            yield return DoProt();
         }
-        protected abstract void DoProt();
+        protected abstract IEnumerator DoProt();
     }
 }

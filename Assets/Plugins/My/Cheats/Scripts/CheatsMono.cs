@@ -41,7 +41,7 @@ namespace MyCheats
                 if (cheat != null)
                 {
                     currentCheat = cheat;
-                    currentCheat.Do();
+                    StartCoroutine(currentCheat.Do());
                     inputed.Clear();
 
                     if (coroutine != null) StopCoroutine(coroutine);

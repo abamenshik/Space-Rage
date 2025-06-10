@@ -1,4 +1,6 @@
+using System.Collections;
 using MyCheats;
+using UnityEngine;
 
 public class TestCheat : CheatBase
 {
@@ -6,7 +8,8 @@ public class TestCheat : CheatBase
 
     public override string Description => "просто тестовый чит";
 
-    protected override void DoProt()
+    protected override IEnumerator DoProt()
     {
+        yield break;
     }
 }
