@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public static class ActivityStateExtension
+public static class CollectionsExtension
 {
     public static void On(this Collider component) => component.enabled = true;
     public static void Off(this Collider component) => component.enabled = false;

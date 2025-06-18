@@ -242,12 +242,12 @@ namespace SpaceRage
             if (collisionWithGround.TryRayCast(transform.forward, out var hit))
             {
                 Gizmos.color = Color.green;
-                Gizmos.DrawLine(transform.position.AddToY(-.5f), hit.point);
+                Gizmos.DrawLine(Vector3Extension.YAdd(transform.position, -.5f), hit.point);
             }
             else
             {
                 Gizmos.color = Color.red;
-                Gizmos.DrawLine(transform.position.AddToY(-.5f), transform.position + transform.forward * collisionWithGround.distance);
+                Gizmos.DrawLine(Vector3Extension.YAdd(transform.position, -.5f), transform.position + transform.forward * collisionWithGround.distance);
             }
 
             UnityEditor.Handles.SphereHandleCap(0, hit.point, Quaternion.identity, 1, EventType.Repaint);

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
-public static class FloatExtension {
+public static class FloatExtension
+{
     /// <summary>
     /// Return normalized Vector2.
     /// </summary>
@@ -19,7 +20,9 @@ public static class FloatExtension {
     /// <param name="min2">new range min</param>
     /// <param name="max2">new range max</param>
     /// <returns>value in new range</returns>
-    public static float MapRange(this float value, float min1, float max1, float min2, float max2) {
-        return (value - min1) / (max1 - min1) * (max2 - min2) + min2;
+    public static float MapRange(this float value, float min1, float max1, float min2, float max2)
+    {
+        var lerp = Mathf.InverseLerp(min1, max1, value);
+        return Mathf.Lerp(min2, max2, lerp);
     }
 }
